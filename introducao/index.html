@@ -1,0 +1,1508 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guia AIOS — Do Zero ao Avançado</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-main: #0a0a0f;
+    --bg-card: #12121a;
+    --bg-card-hover: #1a1a28;
+    --accent-blue: #4f8fff;
+    --accent-cyan: #00e5cc;
+    --accent-purple: #a78bfa;
+    --accent-orange: #ff8c42;
+    --accent-pink: #ff6b9d;
+    --accent-green: #34d399;
+    --accent-yellow: #fbbf24;
+    --accent-red: #f87171;
+    --text-primary: #e8e8f0;
+    --text-secondary: #8888a0;
+    --text-muted: #55556a;
+    --border-subtle: rgba(255,255,255,0.06);
+    --border-accent: rgba(79,143,255,0.3);
+    --glow-blue: 0 0 40px rgba(79,143,255,0.15);
+    --glow-cyan: 0 0 40px rgba(0,229,204,0.12);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--bg-main);
+    color: var(--text-primary);
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ========== HERO ========== */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(ellipse at 30% 50%, rgba(79,143,255,0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 70% 30%, rgba(0,229,204,0.06) 0%, transparent 40%),
+                radial-gradient(ellipse at 50% 80%, rgba(167,139,250,0.05) 0%, transparent 40%);
+    animation: heroFloat 20s ease-in-out infinite;
+  }
+
+  @keyframes heroFloat {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    33% { transform: translate(-2%, 1%) rotate(1deg); }
+    66% { transform: translate(1%, -1%) rotate(-0.5deg); }
+  }
+
+  .hero-badge {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(79,143,255,0.1);
+    border: 1px solid rgba(79,143,255,0.2);
+    border-radius: 100px;
+    padding: 0.4rem 1.2rem;
+    font-size: 0.85rem;
+    color: var(--accent-blue);
+    font-weight: 500;
+    margin-bottom: 2rem;
+    animation: fadeInDown 0.8s ease-out;
+  }
+
+  .hero-badge::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent-cyan);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.5); }
+  }
+
+  .hero h1 {
+    position: relative;
+    font-family: 'Outfit', sans-serif;
+    font-size: clamp(2.5rem, 7vw, 5rem);
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+    animation: fadeInUp 1s ease-out;
+  }
+
+  .hero h1 .gradient-text {
+    background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-cyan) 50%, var(--accent-purple) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-subtitle {
+    position: relative;
+    font-size: clamp(1rem, 2.5vw, 1.3rem);
+    color: var(--text-secondary);
+    max-width: 600px;
+    margin-bottom: 3rem;
+    font-weight: 300;
+    animation: fadeInUp 1s ease-out 0.2s both;
+  }
+
+  .hero-nav {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: center;
+    animation: fadeInUp 1s ease-out 0.4s both;
+  }
+
+  .hero-nav a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.6rem 1.2rem;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none;
+    color: var(--text-primary);
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    transition: all 0.3s ease;
+  }
+
+  .hero-nav a:hover {
+    border-color: var(--accent-blue);
+    background: rgba(79,143,255,0.08);
+    transform: translateY(-2px);
+    box-shadow: var(--glow-blue);
+  }
+
+  .scroll-indicator {
+    position: absolute;
+    bottom: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    animation: bounce 2s ease-in-out infinite;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(8px); }
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ========== MAIN CONTENT ========== */
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 1.5rem 6rem;
+  }
+
+  /* ========== MODULE SECTIONS ========== */
+  .module {
+    margin-bottom: 5rem;
+    scroll-margin-top: 2rem;
+  }
+
+  .module-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .module-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+
+  .module-header h2 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  .module-header .subtitle {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    font-weight: 400;
+  }
+
+  /* Module color themes */
+  .mod-blue .module-number { background: rgba(79,143,255,0.15); color: var(--accent-blue); }
+  .mod-cyan .module-number { background: rgba(0,229,204,0.15); color: var(--accent-cyan); }
+  .mod-purple .module-number { background: rgba(167,139,250,0.15); color: var(--accent-purple); }
+  .mod-orange .module-number { background: rgba(255,140,66,0.15); color: var(--accent-orange); }
+  .mod-pink .module-number { background: rgba(255,107,157,0.15); color: var(--accent-pink); }
+  .mod-green .module-number { background: rgba(52,211,153,0.15); color: var(--accent-green); }
+  .mod-yellow .module-number { background: rgba(251,191,36,0.15); color: var(--accent-yellow); }
+
+  /* ========== CONCEPT CARDS ========== */
+  .concept {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 16px;
+    padding: 1.8rem;
+    margin-bottom: 1.5rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .concept:hover {
+    border-color: rgba(255,255,255,0.1);
+    background: var(--bg-card-hover);
+  }
+
+  .concept::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    border-radius: 4px 0 0 4px;
+  }
+
+  .concept.accent-blue::before { background: var(--accent-blue); }
+  .concept.accent-cyan::before { background: var(--accent-cyan); }
+  .concept.accent-purple::before { background: var(--accent-purple); }
+  .concept.accent-orange::before { background: var(--accent-orange); }
+  .concept.accent-pink::before { background: var(--accent-pink); }
+  .concept.accent-green::before { background: var(--accent-green); }
+  .concept.accent-yellow::before { background: var(--accent-yellow); }
+
+  .concept h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .concept h3 .emoji {
+    font-size: 1.3rem;
+  }
+
+  .concept .definition {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+    line-height: 1.8;
+  }
+
+  .concept .definition strong {
+    color: var(--text-primary);
+  }
+
+  /* ========== ANALOGY BOX ========== */
+  .analogy {
+    background: rgba(79,143,255,0.06);
+    border: 1px solid rgba(79,143,255,0.15);
+    border-radius: 12px;
+    padding: 1.2rem 1.4rem;
+    margin: 1rem 0;
+    font-size: 0.92rem;
+    line-height: 1.8;
+  }
+
+  .analogy-label {
+    font-weight: 700;
+    color: var(--accent-blue);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  /* ========== STEP-BY-STEP ========== */
+  .steps {
+    margin: 1.2rem 0;
+    counter-reset: step;
+  }
+
+  .step {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    align-items: flex-start;
+  }
+
+  .step-num {
+    counter-increment: step;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    border-radius: 50%;
+    background: rgba(0,229,204,0.12);
+    color: var(--accent-cyan);
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 0.85rem;
+    margin-top: 2px;
+  }
+
+  .step-content {
+    font-size: 0.93rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+
+  .step-content strong {
+    color: var(--text-primary);
+  }
+
+  /* ========== EXAMPLE BOX ========== */
+  .example {
+    background: rgba(52,211,153,0.06);
+    border: 1px solid rgba(52,211,153,0.12);
+    border-radius: 12px;
+    padding: 1.2rem 1.4rem;
+    margin: 1rem 0;
+    font-size: 0.92rem;
+  }
+
+  .example-label {
+    font-weight: 700;
+    color: var(--accent-green);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  /* ========== WARNING/TIP BOX ========== */
+  .tip {
+    background: rgba(251,191,36,0.06);
+    border: 1px solid rgba(251,191,36,0.12);
+    border-radius: 12px;
+    padding: 1.2rem 1.4rem;
+    margin: 1rem 0;
+    font-size: 0.92rem;
+  }
+
+  .tip-label {
+    font-weight: 700;
+    color: var(--accent-yellow);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.4rem;
+  }
+
+  .danger {
+    background: rgba(248,113,113,0.06);
+    border: 1px solid rgba(248,113,113,0.12);
+    border-radius: 12px;
+    padding: 1.2rem 1.4rem;
+    margin: 1rem 0;
+    font-size: 0.92rem;
+  }
+
+  .danger-label {
+    font-weight: 700;
+    color: var(--accent-red);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.4rem;
+  }
+
+  /* ========== CODE BLOCKS ========== */
+  .code-block {
+    background: rgba(0,0,0,0.4);
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
+    padding: 1rem 1.2rem;
+    margin: 0.8rem 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    color: var(--accent-cyan);
+    overflow-x: auto;
+    line-height: 1.6;
+  }
+
+  .code-block .comment { color: var(--text-muted); }
+  .code-block .keyword { color: var(--accent-purple); }
+  .code-block .string { color: var(--accent-green); }
+
+  /* ========== COMPARISON TABLE ========== */
+  .comparison {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin: 1.2rem 0;
+  }
+
+  .comparison-col {
+    background: var(--bg-card);
+    border-radius: 12px;
+    padding: 1.2rem;
+    border: 1px solid var(--border-subtle);
+  }
+
+  .comparison-col.good {
+    border-color: rgba(52,211,153,0.2);
+  }
+
+  .comparison-col.bad {
+    border-color: rgba(248,113,113,0.2);
+  }
+
+  .comparison-col h4 {
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .comparison-col.good h4 { color: var(--accent-green); }
+  .comparison-col.bad h4 { color: var(--accent-red); }
+
+  .comparison-col p {
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+
+  /* ========== FLOW DIAGRAM ========== */
+  .flow {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 1rem 0;
+    padding: 1rem;
+    background: rgba(0,0,0,0.2);
+    border-radius: 12px;
+  }
+
+  .flow-item {
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .flow-arrow {
+    color: var(--text-muted);
+    font-size: 1.2rem;
+  }
+
+  .flow-item.blue { background: rgba(79,143,255,0.15); color: var(--accent-blue); }
+  .flow-item.cyan { background: rgba(0,229,204,0.15); color: var(--accent-cyan); }
+  .flow-item.purple { background: rgba(167,139,250,0.15); color: var(--accent-purple); }
+  .flow-item.green { background: rgba(52,211,153,0.15); color: var(--accent-green); }
+  .flow-item.orange { background: rgba(255,140,66,0.15); color: var(--accent-orange); }
+  .flow-item.pink { background: rgba(255,107,157,0.15); color: var(--accent-pink); }
+
+  /* ========== CHECKLIST ========== */
+  .checklist {
+    margin: 1rem 0;
+  }
+
+  .check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.7rem;
+    padding: 0.5rem 0;
+    font-size: 0.92rem;
+    color: var(--text-secondary);
+  }
+
+  .check-icon {
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+    border-radius: 6px;
+    background: rgba(52,211,153,0.12);
+    color: var(--accent-green);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    margin-top: 3px;
+  }
+
+  /* ========== GLOSSARY ========== */
+  .glossary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1rem;
+    margin: 1rem 0;
+  }
+
+  .glossary-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    padding: 1rem 1.2rem;
+    transition: all 0.3s ease;
+  }
+
+  .glossary-item:hover {
+    border-color: rgba(255,255,255,0.1);
+  }
+
+  .glossary-term {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--accent-cyan);
+    margin-bottom: 0.3rem;
+  }
+
+  .glossary-def {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  /* ========== RESPONSIVE ========== */
+  @media (max-width: 640px) {
+    .comparison { grid-template-columns: 1fr; }
+    .glossary-grid { grid-template-columns: 1fr; }
+    .flow { flex-direction: column; align-items: stretch; }
+    .flow-arrow { transform: rotate(90deg); align-self: center; }
+    .concept { padding: 1.4rem; }
+    .hero-nav { flex-direction: column; align-items: center; }
+  }
+
+  /* ========== SEPARATOR ========== */
+  .sep {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border-subtle), transparent);
+    margin: 4rem 0;
+  }
+</style>
+</head>
+<body>
+
+<!-- ==================== HERO ==================== -->
+<section class="hero">
+  <div class="hero-badge">Material de Estudos — Cohort Avançado</div>
+  <h1>
+    Guia <span class="gradient-text">AIOS</span><br>
+    Do Zero ao Avançado
+  </h1>
+  <p class="hero-subtitle">
+    Tudo o que você precisa saber para criar projetos incríveis com agentes de IA — explicado passo a passo, como se você tivesse 15 anos.
+  </p>
+  <nav class="hero-nav">
+    <a href="#mod1">📦 Módulo 1 — Fundamentos</a>
+    <a href="#mod2">🧠 Módulo 2 — Mentalidade</a>
+    <a href="#mod3">🏗️ Módulo 3 — Arquitetura</a>
+    <a href="#mod4">⚡ Módulo 4 — Determinismo</a>
+    <a href="#mod5">🔧 Módulo 5 — Ferramentas</a>
+    <a href="#mod6">🚀 Módulo 6 — Prática</a>
+    <a href="#glossario">📖 Glossário</a>
+  </nav>
+  <div class="scroll-indicator">
+    Role para baixo ↓
+  </div>
+</section>
+
+<div class="container">
+
+<!-- ==================== MÓDULO 1 ==================== -->
+<section class="module mod-blue" id="mod1">
+  <div class="module-header">
+    <div class="module-number">01</div>
+    <div>
+      <h2>Fundamentos — O que é o AIOS?</h2>
+      <div class="subtitle">Entendendo o terreno antes de construir</div>
+    </div>
+  </div>
+
+  <!-- AIOS -->
+  <div class="concept accent-blue">
+    <h3><span class="emoji">🤖</span> O que é o AIOS?</h3>
+    <p class="definition">
+      AIOS é um <strong>framework open source</strong> — ou seja, um conjunto de ferramentas e regras organizadas — que funciona como um <strong>"sistema operacional" para agentes de IA</strong>. Ele permite que você crie projetos complexos (sites, apps, automações, escritórios inteiros) usando inteligência artificial, <strong>mesmo sem saber programar profundamente</strong>.
+    </p>
+    <div class="analogy">
+      <div class="analogy-label">🎮 Analogia para entender</div>
+      Pense no AIOS como o <strong>sistema operacional de um videogame</strong> (tipo o Windows ou Android). Você não precisa saber como a TV funciona por dentro para jogar — o sistema cuida disso. O AIOS faz a mesma coisa: cuida da parte complicada (código, agentes, organização) enquanto você se concentra em <strong>dizer o que quer criar</strong>.
+    </div>
+  </div>
+
+  <!-- Cloud Code -->
+  <div class="concept accent-cyan">
+    <h3><span class="emoji">☁️</span> O que é o Cloud Code?</h3>
+    <p class="definition">
+      Cloud Code é o <strong>ambiente onde você conversa com a IA para programar</strong>. É como ter um programador muito rápido ao seu lado, 24h por dia, que entende o que você quer e escreve o código por você. Você digita comandos em texto (não precisa programar) e ele executa.
+    </p>
+    <div class="analogy">
+      <div class="analogy-label">🎮 Analogia para entender</div>
+      Imagine que você está jogando Minecraft no modo criativo com um assistente que constrói tudo que você pede. Você fala: <em>"Quero um castelo com 4 torres"</em> — e ele constrói. O Cloud Code funciona assim: você descreve o que quer e a IA cria o código.
+    </div>
+  </div>
+
+  <!-- GitHub -->
+  <div class="concept accent-purple">
+    <h3><span class="emoji">🗂️</span> O que é o GitHub?</h3>
+    <p class="definition">
+      GitHub é uma <strong>plataforma na internet onde guardamos código</strong>. Pense nele como um <strong>Google Drive para programadores</strong>. Ele permite: salvar todas as versões do seu projeto (como um CTRL+Z infinito), compartilhar código com outras pessoas e trabalhar em equipe sem bagunça.
+    </p>
+    <div class="analogy">
+      <div class="analogy-label">🎮 Analogia para entender</div>
+      Imagine um caderno mágico onde tudo que você escreve é salvo automaticamente, página por página. Se você errar, pode voltar para qualquer página anterior. E seus amigos podem escrever no mesmo caderno sem apagar o que você fez. Isso é o GitHub.
+    </div>
+    <div class="example">
+      <div class="example-label">💡 Na prática</div>
+      O repositório AIOS no GitHub é a <strong>"fonte da verdade"</strong> — o lugar oficial onde estão todas as documentações, projetos e configurações. Se você se perder, volte sempre ao GitHub.
+    </div>
+  </div>
+
+  <!-- Source of Truth -->
+  <div class="concept accent-green">
+    <h3><span class="emoji">🧭</span> Source of Truth (Fonte da Verdade)</h3>
+    <p class="definition">
+      É o <strong>único lugar confiável</strong> onde você encontra a informação oficial e atualizada. Quando alguém disser algo diferente do que está lá, <strong>confie na fonte da verdade</strong>. No caso do AIOS, a fonte da verdade é o repositório no GitHub.
+    </p>
+    <div class="analogy">
+      <div class="analogy-label">🎮 Analogia para entender</div>
+      Num parque de diversões, existe sempre aquele <strong>ponto de encontro</strong> com uma bandeira amarela — se você se perder, vá até lá. A "Fonte da Verdade" é o ponto de encontro do seu projeto. Perdeu algo? Não sabe como funciona? Volte ao repositório oficial.
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content"><strong>Alguém disse algo diferente?</strong> Vá ao repositório e confira.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content"><strong>Ficou confuso?</strong> Abra a documentação na fonte da verdade.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content"><strong>Encontrou um bug?</strong> Verifique se já foi corrigido na versão mais recente do GitHub.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CLI -->
+  <div class="concept accent-orange">
+    <h3><span class="emoji">⌨️</span> O que é CLI (Command Line Interface)?</h3>
+    <p class="definition">
+      CLI é aquela <strong>tela preta onde você digita comandos</strong> (o terminal). Em vez de clicar em botões, você escreve o que quer que o computador faça. Parece assustador, mas é muito mais rápido e poderoso que clicar com o mouse.
+    </p>
+    <div class="analogy">
+      <div class="analogy-label">🎮 Analogia para entender</div>
+      Clicar em botões é como pedir comida apontando pro menu num restaurante. Usar CLI é como dizer <em>"Quero um X-Burger sem cebola, com batata extra e suco de laranja"</em> em uma frase. Mais rápido, mais preciso, mais poder.
+    </div>
+    <div class="code-block">
+      <span class="comment"># Comandos básicos do terminal que você vai usar:</span><br>
+      <span class="keyword">cd</span> nome-da-pasta &nbsp;&nbsp;&nbsp;<span class="comment"># entrar numa pasta</span><br>
+      <span class="keyword">cd</span> .. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment"># voltar uma pasta</span><br>
+      <span class="keyword">ls</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment"># ver o que tem dentro da pasta</span><br>
+      <span class="keyword">mkdir</span> meu-projeto &nbsp;&nbsp;<span class="comment"># criar uma pasta nova</span><br>
+    </div>
+  </div>
+
+  <!-- Upstream -->
+  <div class="concept accent-pink">
+    <h3><span class="emoji">🔄</span> O que é Upstream?</h3>
+    <p class="definition">
+      Upstream é uma forma de <strong>manter seu projeto pessoal conectado ao projeto oficial</strong>. Assim, quando o AIOS for atualizado, você recebe as melhorias sem perder suas mudanças pessoais.
+    </p>
+    <div class="analogy">
+      <div class="analogy-label">🎮 Analogia para entender</div>
+      Imagine que você tem um celular e instala uma capa personalizada. Quando sai uma atualização do sistema, você atualiza o celular (upstream) mas continua com sua capa personalizada. O upstream atualiza o sistema sem mexer nas suas personalizações.
+    </div>
+    <div class="flow">
+      <div class="flow-item blue">Repositório Oficial AIOS</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-item cyan">Upstream (puxa atualizações)</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-item purple">Merge seletivo</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-item green">Seu projeto atualizado ✓</div>
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- ==================== MÓDULO 2 ==================== -->
+<section class="module mod-cyan" id="mod2">
+  <div class="module-header">
+    <div class="module-number">02</div>
+    <div>
+      <h2>Mentalidade — Como Pensar</h2>
+      <div class="subtitle">Os princípios que valem mais que qualquer código</div>
+    </div>
+  </div>
+
+  <div class="concept accent-cyan">
+    <h3><span class="emoji">🧠</span> Princípio 1 — "O problema NÃO é técnico"</h3>
+    <p class="definition">
+      A maior dificuldade NÃO é saber programar. A maior dificuldade é ter <strong>repertório</strong> — ou seja, saber <strong>o que pedir</strong> para a IA, como descrever bem o que você quer, e como pensar o projeto em partes. A IA faz o código; <strong>você precisa saber o que quer criar</strong>.
+    </p>
+    <div class="comparison">
+      <div class="comparison-col bad">
+        <h4>❌ Mentalidade errada</h4>
+        <p>"Preciso aprender a programar em Python, JavaScript, SQL antes de começar qualquer coisa."</p>
+      </div>
+      <div class="comparison-col good">
+        <h4>✅ Mentalidade certa</h4>
+        <p>"Preciso aprender a descrever bem o que quero, dividir problemas em partes, e deixar a IA cuidar do código."</p>
+      </div>
+    </div>
+    <div class="example">
+      <div class="example-label">💡 Exemplo real da aula</div>
+      Pedro nunca tinha visto código na vida até abril do ano passado. Mesmo assim, criou sistemas complexos porque aprendeu a <strong>pensar nos processos</strong> e a pedir certo para a IA. Alan, por outro lado, é programador — mas 80% do tempo dele era fazendo <strong>perguntas</strong> para a IA.
+    </div>
+  </div>
+
+  <div class="concept accent-blue">
+    <h3><span class="emoji">📖</span> Princípio 2 — Leia a Documentação</h3>
+    <p class="definition">
+      O hábito mais importante que você precisa ter: <strong>ler a documentação</strong>. Toda vez que não souber algo, antes de perguntar para alguém, vá até a documentação. Se não quiser ler, jogue para a IA ler por você e te explicar.
+    </p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content"><strong>Não entendeu algo?</strong> Abra a documentação do projeto no GitHub.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content"><strong>A documentação é grande?</strong> Copie e cole para a IA e peça: <em>"Explique isso em 5 frases simples."</em></div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content"><strong>Ouviu uma palavra nova?</strong> Pergunte à IA — ela nunca vai te julgar.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="concept accent-purple">
+    <h3><span class="emoji">🦸</span> Princípio 3 — Controle o Ego</h3>
+    <p class="definition">
+      Quando a IA fizer algo incrível por você, lembre-se: <strong>você está dentro de um carro muito rápido, não se tornou o carro</strong>. O AIOS te potencializa, mas não te transforma num gênio da programação. Humildade para continuar aprendendo é essencial.
+    </p>
+    <div class="analogy">
+      <div class="analogy-label">🎮 Analogia da aula</div>
+      <em>"Estou andando a 200km/h — mas é porque estou dentro de um carro. Não me tornei mais rápido que um tigre. Estou 200km/h porque o carro me levou."</em> — O AIOS é o carro. Você é o motorista. Dirija bem.
+    </div>
+  </div>
+
+  <div class="concept accent-green">
+    <h3><span class="emoji">🔁</span> Princípio 4 — Melhore o Processo Sempre</h3>
+    <p class="definition">
+      Toda vez que estiver fazendo algo repetitivo, <strong>pare e melhore o processo</strong>. Crie um workflow, uma automação, ou peça para a IA criar um script. Seu "eu de amanhã" vai agradecer.
+    </p>
+    <div class="tip">
+      <div class="tip-label">⚡ Regra de ouro</div>
+      Se você fez a mesma coisa mais de 2 vezes, é hora de automatizar. Pergunte para a IA: <em>"Como posso nunca mais precisar fazer isso manualmente?"</em>
+    </div>
+  </div>
+
+  <div class="concept accent-orange">
+    <h3><span class="emoji">🚫</span> Princípio 5 — Fuja do Julgamento da IA</h3>
+    <p class="definition">
+      Não confie cegamente na IA para tomar <strong>decisões importantes</strong>. A IA é <strong>probabilística</strong> (pode errar) e <strong>não é inteligente</strong> — ela é muito eficiente com dados, mas não "pensa" de verdade. Use regras, checklists e processos determinísticos no lugar.
+    </p>
+    <div class="danger">
+      <div class="danger-label">🚨 Atenção</div>
+      Alan disse na aula: <em>"Eu parto do princípio de que TODAS as IAs são extremamente burras. Cloud Opus 4.5 é burra."</em> — Isso significa: não deixe decisões críticas na mão da IA. Use processos claros, mapeados, com regras definidas.
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- ==================== MÓDULO 3 ==================== -->
+<section class="module mod-purple" id="mod3">
+  <div class="module-header">
+    <div class="module-number">03</div>
+    <div>
+      <h2>Arquitetura de Projetos — Como Organizar</h2>
+      <div class="subtitle">A metodologia ágil aplicada ao AIOS</div>
+    </div>
+  </div>
+
+  <div class="concept accent-purple">
+    <h3><span class="emoji">📋</span> PRD — Product Requirements Document</h3>
+    <p class="definition">
+      É o <strong>documento que descreve TUDO que o projeto precisa ter</strong>. Antes de construir qualquer coisa, você cria o PRD. É como uma receita completa de bolo — lista todos os ingredientes e passos antes de começar a misturar.
+    </p>
+    <div class="analogy">
+      <div class="analogy-label">🎮 Analogia para entender</div>
+      Antes de construir uma casa, o arquiteto faz a planta. O PRD é a planta do seu projeto. Sem ele, você vai construir sem saber onde fica o banheiro.
+    </div>
+    <div class="example">
+      <div class="example-label">💡 O que tem dentro de um PRD</div>
+      Descrição do projeto, o problema que resolve, quem vai usar, as funcionalidades necessárias, regras de negócio, integrações com outras ferramentas, e métricas de sucesso. A IA pode criar o PRD por você — basta descrever bem o que você quer.
+    </div>
+  </div>
+
+  <div class="concept accent-blue">
+    <h3><span class="emoji">🎬</span> Épicos</h3>
+    <p class="definition">
+      São as <strong>grandes entregas do projeto</strong>, os "capítulos" da história. Cada épico é composto de muitas tarefas menores. Normalmente, <strong>um épico depende do anterior</strong> — você não faz o capítulo 3 sem terminar o capítulo 2.
+    </p>
+    <div class="analogy">
+      <div class="analogy-label">🎮 Analogia para entender</div>
+      Pense num filme. Os épicos são os grandes <strong>atos</strong> do filme: Ato 1 (apresentação dos personagens), Ato 2 (conflito), Ato 3 (resolução). Cada ato tem muitas cenas (stories) que precisam ser filmadas para completar aquele ato.
+    </div>
+  </div>
+
+  <div class="concept accent-cyan">
+    <h3><span class="emoji">📝</span> Stories (Histórias)</h3>
+    <p class="definition">
+      São <strong>micro-entregas</strong> dentro de um épico. Cada story tem um <strong>objetivo claro</strong>, tarefas e subtarefas. Quando todas as stories de um épico são concluídas, o épico está pronto.
+    </p>
+    <div class="example">
+      <div class="example-label">💡 Exemplo real</div>
+      <em>"Como membro da equipe usando WhatsApp, eu quero interagir com o agente Wall para gerenciar projetos, para que eu possa checar status, validar checklists e receber prazos sem abrir o ClickUp."</em><br><br>
+      Para essa story funcionar, muitas coisas precisam ser desenvolvidas: conexão com WhatsApp, acesso ao ClickUp, separação de usuários, etc. Cada uma dessas é uma <strong>tarefa</strong>.
+    </div>
+  </div>
+
+  <div class="concept accent-green">
+    <h3><span class="emoji">✅</span> Tasks (Tarefas)</h3>
+    <p class="definition">
+      São as <strong>atividades específicas</strong> que precisam ser feitas. Cada tarefa é executada por um <strong>agente</strong> diferente (Dev, QA, Data Engineer, UX Designer, etc.). É o nível mais granular — onde o trabalho realmente acontece.
+    </p>
+  </div>
+
+  <div class="concept accent-orange">
+    <h3><span class="emoji">⚙️</span> Workflows</h3>
+    <p class="definition">
+      São <strong>fluxos automáticos</strong> — sequências de ações que acontecem em ordem. Quando uma tarefa termina, o workflow automaticamente inicia a próxima. É como uma linha de montagem.
+    </p>
+  </div>
+
+  <div class="concept accent-pink">
+    <h3><span class="emoji">👥</span> Squads</h3>
+    <p class="definition">
+      São <strong>equipes de agentes de IA especializados</strong> em um domínio. Por exemplo, um "Squad de Contabilidade" tem agentes que sabem lidar com impostos, notas fiscais, relatórios, etc. Cada squad é como uma mini-empresa dentro do seu projeto.
+    </p>
+  </div>
+
+  <!-- FLUXO COMPLETO -->
+  <div class="tip">
+    <div class="tip-label">🗺️ O fluxo completo de um projeto</div>
+    <div class="flow">
+      <div class="flow-item blue">PRD</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-item purple">Épicos</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-item cyan">Stories</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-item green">Tasks</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-item orange">Workflows executam</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-item pink">Squads entregam ✓</div>
+    </div>
+  </div>
+
+  <!-- POR QUE PRECISAMOS DISSO? -->
+  <div class="concept accent-yellow">
+    <h3><span class="emoji">❓</span> Por que essa organização toda?</h3>
+    <p class="definition">
+      Por causa da <strong>janela de contexto</strong>. A IA tem uma memória limitada (~200.000 tokens). Se você der um comando gigante de uma vez, ela não vai conseguir processar tudo. Dividindo em épicos, stories e tasks, <strong>cada pedaço cabe na memória da IA</strong>, e ela sabe exatamente o que fazer e onde parou.
+    </p>
+    <div class="analogy">
+      <div class="analogy-label">🎮 Analogia para entender</div>
+      Imagine que você está contando uma história de 500 páginas para alguém, mas essa pessoa só consegue lembrar das últimas 20 páginas. Se você contar tudo de uma vez, ela vai esquecer o começo. Mas se você dividir em capítulos com resumos, ela sabe onde parou e o que já fez. É exatamente por isso que usamos stories e checklists.
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- ==================== MÓDULO 4 ==================== -->
+<section class="module mod-orange" id="mod4">
+  <div class="module-header">
+    <div class="module-number">04</div>
+    <div>
+      <h2>Determinístico vs. Probabilístico</h2>
+      <div class="subtitle">O conceito mais importante de todo o curso</div>
+    </div>
+  </div>
+
+  <div class="concept accent-orange">
+    <h3><span class="emoji">🎯</span> O que é Determinístico?</h3>
+    <p class="definition">
+      Uma tarefa é <strong>determinística</strong> quando ela <strong>sempre produz o mesmo resultado</strong>, não importa quantas vezes você repita. Não precisa de criatividade, interpretação ou "opinião" — é uma operação mecânica e previsível.
+    </p>
+    <div class="example">
+      <div class="example-label">💡 Exemplos de tarefas determinísticas</div>
+      Converter um arquivo EPUB para Markdown. Enviar dados para uma API. Executar uma consulta SQL no banco de dados. Fazer upload de uma imagem para o Instagram. Verificar se um código de erro é 404 (página não encontrada) ou 500 (erro interno do servidor).
+    </div>
+    <div class="analogy">
+      <div class="analogy-label">🎮 Analogia para entender</div>
+      Apertar o botão do elevador é determinístico: você aperta o botão, o elevador vem. Sempre. Não precisa de criatividade, não precisa de opinião. O resultado é sempre o mesmo.
+    </div>
+  </div>
+
+  <div class="concept accent-purple">
+    <h3><span class="emoji">🎲</span> O que é Probabilístico?</h3>
+    <p class="definition">
+      Uma tarefa é <strong>probabilística</strong> quando ela precisa de <strong>criatividade, interpretação ou subjetividade</strong>. O resultado pode variar cada vez que é executada. É aqui que a IA brilha — mas também é onde ela pode errar.
+    </p>
+    <div class="example">
+      <div class="example-label">💡 Exemplos de tarefas probabilísticas</div>
+      Escrever um texto de marketing. Analisar se um cliente está satisfeito com base numa mensagem. Criar um design visual. Decidir a melhor estratégia para um problema. Traduzir com sensibilidade cultural.
+    </div>
+    <div class="analogy">
+      <div class="analogy-label">🎮 Analogia para entender</div>
+      Escolher qual roupa vestir é probabilístico: depende do seu humor, do clima, da ocasião. Duas pessoas na mesma situação podem escolher roupas completamente diferentes. Não tem resposta "certa" única.
+    </div>
+  </div>
+
+  <!-- Tabela comparativa -->
+  <div class="concept accent-green">
+    <h3><span class="emoji">⚖️</span> Como Decidir: Pergunte-se...</h3>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content"><strong>"Essa tarefa sempre produz o mesmo resultado?"</strong> Se sim → é <strong>determinística</strong> → use código/script.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content"><strong>"Essa tarefa precisa de criatividade ou interpretação?"</strong> Se sim → é <strong>probabilística</strong> → use a IA.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content"><strong>"Essa tarefa é executiva (faz a mesma coisa sempre) ou criativa?"</strong> Executiva = código. Criativa = IA.</div>
+      </div>
+    </div>
+    <div class="flow">
+      <div class="flow-item orange">Tarefa</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-item cyan">É sempre igual?</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-item green">SIM → Script (barato, rápido)</div>
+    </div>
+    <div class="flow" style="margin-top:0.5rem">
+      <div class="flow-item orange">Tarefa</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-item cyan">Precisa pensar?</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-item purple">SIM → IA (mais tokens, mais caro)</div>
+    </div>
+  </div>
+
+  <div class="concept accent-yellow">
+    <h3><span class="emoji">💰</span> Por que isso importa? ECONOMIA.</h3>
+    <p class="definition">
+      Na aula, Alan demonstrou que refatorar tarefas para serem determinísticas economizou <strong>90% dos tokens</strong> em um agente que ele usava o tempo todo. Em números reais: de <strong>8 milhões de tokens/mês para 2 milhões</strong>, economizando mais de <strong>R$10.000 por ano</strong>.
+    </p>
+    <div class="comparison">
+      <div class="comparison-col bad">
+        <h4>❌ Sem classificação</h4>
+        <p>8 milhões de tokens/mês. ~R$1.200/mês. IA fazendo tudo, inclusive tarefas mecânicas que poderiam ser scripts simples.</p>
+      </div>
+      <div class="comparison-col good">
+        <h4>✅ Com classificação</h4>
+        <p>2 milhões de tokens/mês. ~R$450/mês. Scripts fazem as tarefas mecânicas. IA só faz o que precisa de "cérebro".</p>
+      </div>
+    </div>
+    <div class="tip">
+      <div class="tip-label">⚡ Classificação real do agente DB Saad</div>
+      12 tarefas → 90% via script (economia gigante). 9 tarefas → 50% script + 50% IA (economia moderada). 7 tarefas → 100% IA (sem economia possível). O segredo é classificar CADA tarefa e otimizar.
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- ==================== MÓDULO 5 ==================== -->
+<section class="module mod-pink" id="mod5">
+  <div class="module-header">
+    <div class="module-number">05</div>
+    <div>
+      <h2>Ferramentas — O Seu Arsenal</h2>
+      <div class="subtitle">Decision Trees, Tool Discovery e como tomar boas decisões</div>
+    </div>
+  </div>
+
+  <div class="concept accent-pink">
+    <h3><span class="emoji">🌳</span> Decision Tree (Árvore de Decisão)</h3>
+    <p class="definition">
+      Uma Decision Tree é um <strong>mapa de perguntas SIM/NÃO</strong> que leva a uma decisão final. Em vez de deixar a IA "adivinhar" o que fazer, você cria um fluxo onde cada pergunta leva a uma resposta clara e <strong>determinística</strong>.
+    </p>
+    <div class="analogy">
+      <div class="analogy-label">🎮 Analogia para entender</div>
+      Lembra daqueles livros de "Escolha sua aventura"? Na página 15 você decide: vai pela floresta (vá para a página 32) ou pelo rio (vá para a página 47). Uma Decision Tree funciona assim — cada pergunta te leva por um caminho diferente até chegar na resposta certa.
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content"><strong>A tarefa requer criatividade ou subjetividade?</strong> Se NÃO → próxima pergunta. Se SIM → precisa de um agente IA ou humano.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content"><strong>Existe um algoritmo (passo a passo fixo) para fazer isso?</strong> Se SIM → <strong>Worker com script</strong>. Se NÃO → próxima pergunta.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content"><strong>Precisa de julgamento humano?</strong> Se NÃO → existe uma metodologia documentada? Use agente clone com heurísticas. Se SIM → próxima pergunta.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content"><strong>É uma decisão crítica (financeira, legal)?</strong> Se SIM → <strong>Humano obrigatório</strong>. Se NÃO → pode ser automatizado com metodologia certa.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="concept accent-cyan">
+    <h3><span class="emoji">🔍</span> Tool Discovery (Descoberta de Ferramentas)</h3>
+    <p class="definition">
+      Antes de criar algo do zero, <strong>pesquise se alguém já criou</strong>. O Tool Discovery é o processo de buscar MCPs, APIs, CLIs, bibliotecas e projetos no GitHub que podem resolver seu problema sem que você precise reinventar a roda.
+    </p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content"><strong>Identifique a necessidade:</strong> "Preciso de uma ferramenta que converta PDF para texto."</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content"><strong>Pesquise em paralelo:</strong> MCPs, APIs, CLIs, bibliotecas GitHub, Skill Libraries.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content"><strong>Avalie cada opção com a matriz:</strong> Benefício incremental? Esforço de implementação? Prova social (muita gente usa)? É seguro? Custo (pago vs. open source)?</div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content"><strong>Escolha e implemente.</strong> Prefira open source seguro e bem avaliado. Só use pago se for muito superior.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="concept accent-green">
+    <h3><span class="emoji">🛡️</span> Critérios para Escolher uma Ferramenta</h3>
+    <div class="checklist">
+      <div class="check-item">
+        <div class="check-icon">✓</div>
+        <div><strong>Prova social</strong> — Muitas pessoas já confirmaram que funciona e é segura.</div>
+      </div>
+      <div class="check-item">
+        <div class="check-icon">✓</div>
+        <div><strong>Segurança</strong> — Se não é seguro, não use. Ponto final. "Segurança é inegociável."</div>
+      </div>
+      <div class="check-item">
+        <div class="check-icon">✓</div>
+        <div><strong>Custo-benefício</strong> — Se a versão open source é boa, use ela. Só pague se o resultado for muito superior.</div>
+      </div>
+      <div class="check-item">
+        <div class="check-icon">✓</div>
+        <div><strong>Benefício incremental</strong> — Quanto essa ferramenta melhora em relação ao que você já tem?</div>
+      </div>
+      <div class="check-item">
+        <div class="check-icon">✓</div>
+        <div><strong>Esforço de implementação</strong> — Quanto trabalho dá para colocar para funcionar?</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="concept accent-orange">
+    <h3><span class="emoji">🧠</span> Memória dos Agentes</h3>
+    <p class="definition">
+      Pedro criou um sistema onde os agentes <strong>lembram</strong> do que aconteceu em sessões anteriores. Ao fim de cada sessão, os agentes "digerem" o que aconteceu e classificam em categorias: incidentes (bugs), features, regras, preferências, decisões e padrões. Cada memória tem um nível de prioridade.
+    </p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content"><strong>Sessão termina</strong> → script faz a "digestão" da sessão.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content"><strong>Classifica</strong> cada informação em categorias (incidente, feature, regra, decisão, etc.).</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content"><strong>Prioriza</strong> — Correções do usuário e regras explícitas no topo; lições aprendidas embaixo.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content"><strong>Revisão humana</strong> — só vira "regra oficial" depois que o humano aprova.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- ==================== MÓDULO 6 ==================== -->
+<section class="module mod-green" id="mod6">
+  <div class="module-header">
+    <div class="module-number">06</div>
+    <div>
+      <h2>Colocando em Prática</h2>
+      <div class="subtitle">Passo a passo real para começar seu primeiro projeto</div>
+    </div>
+  </div>
+
+  <div class="concept accent-green">
+    <h3><span class="emoji">🚀</span> Seu Roteiro de Início</h3>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <strong>Instale o ambiente.</strong> Node.js, Cloud Code, AIOS (via Git Clone ou instalador). Siga a documentação na fonte da verdade. Se travar, pergunte para a IA: <em>"Estou tentando instalar o AIOS e deu este erro: [cola o erro]. O que faço?"</em>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <strong>Defina o que quer criar.</strong> Pode ser algo simples: um bot de WhatsApp, um sistema que organize seus arquivos, um site pessoal. Escreva em 3 frases o que quer.
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <strong>Peça à IA para criar o PRD.</strong> Jogue suas 3 frases e diga: <em>"Crie um PRD completo para este projeto, com épicos e stories."</em>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <strong>Revise o PRD.</strong> Leia o que a IA criou. Algo não faz sentido? Peça ajuste. Está bom? Aprove.
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <strong>Execute story por story.</strong> Não tente fazer tudo de uma vez. Pegue a Story 1 do Épico 1 e peça: <em>"Execute a Story 1."</em>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">6</div>
+        <div class="step-content">
+          <strong>Teste e valide.</strong> Cada story tem checklists. Verifique se tudo passou. Se não, peça correção.
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">7</div>
+        <div class="step-content">
+          <strong>Commit no GitHub.</strong> Salve cada conquista. Não espere tudo ficar pronto para salvar. Salve sempre.
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">8</div>
+        <div class="step-content">
+          <strong>Classifique as tarefas (Determinístico vs. Probabilístico).</strong> Depois que o projeto funcionar, otimize: transforme tarefas mecânicas em scripts.
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">9</div>
+        <div class="step-content">
+          <strong>Configure o Upstream.</strong> Conecte seu projeto ao repositório oficial do AIOS para receber atualizações automáticas.
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">10</div>
+        <div class="step-content">
+          <strong>Itere e melhore.</strong> O projeto nunca está "pronto". Sempre há o que melhorar. Esse é o jogo.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="concept accent-blue">
+    <h3><span class="emoji">💬</span> Como Conversar com a IA (Prompts que Funcionam)</h3>
+    <div class="comparison">
+      <div class="comparison-col bad">
+        <h4>❌ Prompt fraco</h4>
+        <p>"Faz um site pra mim."</p>
+      </div>
+      <div class="comparison-col good">
+        <h4>✅ Prompt forte</h4>
+        <p>"Crie um site de portfólio pessoal com 4 seções: hero, sobre mim, projetos e contato. Use React, Tailwind e tema escuro. O público é recrutadores de tecnologia."</p>
+      </div>
+    </div>
+    <div class="comparison">
+      <div class="comparison-col bad">
+        <h4>❌ Prompt fraco</h4>
+        <p>"Traduz isso do chinês."</p>
+      </div>
+      <div class="comparison-col good">
+        <h4>✅ Prompt forte</h4>
+        <p>"Traduza este vídeo do chinês para português brasileiro. Considere a tradução cultural (exemplo: na China, 'irmão' é usado entre colegas de mesma idade; adapte para o contexto brasileiro). Use modelo especializado em chinês para transcrição e Gemini para análise visual."</p>
+      </div>
+    </div>
+    <div class="tip">
+      <div class="tip-label">⚡ Regra dos prompts</div>
+      Quanto mais contexto e detalhe você der, melhor será o resultado. Pense: <strong>quem, o quê, como, para quem, com quais regras</strong>.
+    </div>
+  </div>
+
+  <div class="concept accent-purple">
+    <h3><span class="emoji">🏢</span> Caso Real: Escritório de Contabilidade em 15 Minutos</h3>
+    <p class="definition">
+      Alan demonstrou ao vivo como criou um <strong>squad inteiro de contabilidade</strong> para escritórios: de empresas do Simples Nacional e Micro Empresas. O resultado:
+    </p>
+    <div class="checklist">
+      <div class="check-item"><div class="check-icon">✓</div><div>54 workflows diferentes mapeados (mensal, anual e sob demanda).</div></div>
+      <div class="check-item"><div class="check-icon">✓</div><div>69% dos workflows totalmente automatizados.</div></div>
+      <div class="check-item"><div class="check-icon">✓</div><div>31% restantes com assistência (a IA ajuda, humano valida).</div></div>
+      <div class="check-item"><div class="check-icon">✓</div><div>Um contador pode gerenciar até 100 clientes com esse sistema.</div></div>
+      <div class="check-item"><div class="check-icon">✓</div><div>PRD completo, 8 épicos com múltiplas stories, 5 workflows e 3 agentes — tudo gerado em minutos.</div></div>
+    </div>
+    <div class="tip">
+      <div class="tip-label">⚡ A lição</div>
+      Um profissional disse para Alan: <em>"Eu estava desenhando isso há 2 anos. Seus agentes desenharam o projeto inteiro em 5 minutos."</em> — Isso é o poder do AIOS bem utilizado.
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- ==================== MÓDULO 7: ROTEAMENTO DE LLMs ==================== -->
+<section class="module mod-yellow" id="mod7">
+  <div class="module-header">
+    <div class="module-number">07</div>
+    <div>
+      <h2>FinOps — Gastando Menos, Fazendo Mais</h2>
+      <div class="subtitle">Como não quebrar o banco usando IA</div>
+    </div>
+  </div>
+
+  <div class="concept accent-yellow">
+    <h3><span class="emoji">🔀</span> Roteador de LLMs — Usando a IA Certa para Cada Tarefa</h3>
+    <p class="definition">
+      Nem toda tarefa precisa da IA mais cara e poderosa. Pedro criou um sistema que usa um modelo barato (Haiku) para <strong>analisar cada mensagem e decidir</strong> se ela deve ir para o modelo barato (Sonnet) ou para o poderoso (Opus). Mensagens simples como "Oi, tudo bem?" não precisam de Opus a US$15/milhão de tokens.
+    </p>
+    <div class="analogy">
+      <div class="analogy-label">🎮 Analogia para entender</div>
+      Não faz sentido usar um caminhão para ir à padaria. Para a padaria, você vai a pé ou de bicicleta. Para mudar de casa, aí sim usa o caminhão. O roteador de LLMs faz isso: manda tarefas leves para modelos leves e tarefas pesadas para modelos pesados.
+    </div>
+    <div class="flow">
+      <div class="flow-item orange">Mensagem chega</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-item cyan">Haiku analisa (barato)</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-item green">Simples → Sonnet</div>
+    </div>
+    <div class="flow" style="margin-top:0.5rem">
+      <div class="flow-item orange">Mensagem chega</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-item cyan">Haiku analisa (barato)</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-item purple">Complexa → Opus</div>
+    </div>
+  </div>
+
+  <div class="concept accent-green">
+    <h3><span class="emoji">📊</span> Estratégias de Economia (FinOps)</h3>
+    <div class="checklist">
+      <div class="check-item">
+        <div class="check-icon">1</div>
+        <div><strong>Classifique tarefas</strong> — determinísticas viram scripts, probabilísticas ficam com IA.</div>
+      </div>
+      <div class="check-item">
+        <div class="check-icon">2</div>
+        <div><strong>Use o roteador de LLMs</strong> — tarefas simples para modelos baratos.</div>
+      </div>
+      <div class="check-item">
+        <div class="check-icon">3</div>
+        <div><strong>Use modelos locais</strong> — alguns modelos rodam no seu computador, de graça.</div>
+      </div>
+      <div class="check-item">
+        <div class="check-icon">4</div>
+        <div><strong>Limpe o histórico</strong> — sessões longas gastam muitos tokens. Limpe e reinicie quando possível.</div>
+      </div>
+      <div class="check-item">
+        <div class="check-icon">5</div>
+        <div><strong>Pense em escala</strong> — sempre pergunte: "Se eu tiver 100 usuários fazendo isso, quanto vai custar?"</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- ==================== GLOSSÁRIO ==================== -->
+<section class="module mod-blue" id="glossario">
+  <div class="module-header">
+    <div class="module-number">📖</div>
+    <div>
+      <h2>Glossário Completo</h2>
+      <div class="subtitle">Todas as palavras novas que você vai ouvir, explicadas de forma simples</div>
+    </div>
+  </div>
+
+  <div class="glossary-grid">
+    <div class="glossary-item">
+      <div class="glossary-term">AIOS</div>
+      <div class="glossary-def">Framework (conjunto de ferramentas e regras) que funciona como um "sistema operacional" para agentes de IA.</div>
+    </div>
+    <div class="glossary-item">
+      <div class="glossary-term">Cloud Code</div>
+      <div class="glossary-def">Ambiente onde você conversa com a IA e ela programa por você. Como ter um programador 24h.</div>
+    </div>
+    <div class="glossary-item">
+      <div class="glossary-term">CLI</div>
+      <div class="glossary-def">Command Line Interface. A tela preta do terminal onde você digita comandos em texto.</div>
+    </div>
+    <div class="glossary-item">
+      <div class="glossary-term">GitHub</div>
+      <div class="glossary-def">Plataforma online para guardar, versionar e compartilhar código. O "Google Drive" dos programadores.</div>
+    </div>
+    <div class="glossary-item">
+      <div class="glossary-term">Source of Truth</div>
+      <div class="glossary-def">O único lugar oficial e confiável para encontrar a verdade sobre o projeto. No AIOS, é o repositório GitHub.</div>
+    </div>
+    <div class="glossary-item">
+      <div class="glossary-term">Upstream</div>
+      <div class="glossary-def">Conexão com o repositório oficial que permite receber atualizações sem perder suas customizações.</div>
+    </div>
+    <div class="glossary-item">
+      <div class="glossary-term">PRD</div>
+      <div class="glossary-def">Product Requirements Document. O "mapa completo" do projeto, feito antes de começar a construir.</div>
+    </div>
+    <div class="glossary-item">
+      <div class="glossary-term">Épico</div>
+      <div class="glossary-def">Grande entrega do projeto, como um "ato" de um filme. Composto de várias stories.</div>
+    </div>
+    <div class="glossary-item">
+      <div class="glossary-term">Story</div>
+      <div class="glossary-def">Micro-entrega dentro de um épico. Tem objetivo claro e várias tarefas dentro dela.</div>
+    </div>
+    <div class="glossary-item">
+      <div class="glossary-term">Task</div>
+      <div class="glossary-def">Atividade específica executada por um agente. O nível mais granular do trabalho.</div>
+    </div>
+    <div class="glossary-item">
+      <div class="glossary-term">Workflow</div>
+      <div class="glossary-def">Sequência automática de ações. Quando uma tarefa termina, o workflow inicia a próxima.</div>
+    </div>
+    <div class="glossary-item">
+      <div class="glossary-term">Squad</div>
+      <div class="glossary-def">Equipe de agentes de IA especializados num domínio (ex: contabilidade, marketing, design).</div>
+    </div>
+    <div class="glossary-item">
+      <div class="glossary-term">Determinístico</div>
+      <div class="glossary-def">Tarefa que sempre produz o mesmo resultado. Deve ser feita por código/script, não por IA.</div>
+    </div>
+    <div class="glossary-item">
+      <div class="glossary-term">Probabilístico</div>
+      <div class="glossary-def">Tarefa que precisa de criatividade ou interpretação. O resultado pode variar. Use IA aqui.</div>
+    </div>
+    <div class="glossary-item">
+      <div class="glossary-term">Decision Tree</div>
+      <div class="glossary-def">Mapa de perguntas SIM/NÃO que leva a uma decisão. Remove a "adivinhação" da IA.</div>
+    </div>
+    <div class="glossary-item">
+      <div class="glossary-term">Token</div>
+      <div class="glossary-def">Unidade de medida da IA. Cada palavra que você envia ou recebe custa tokens. Mais tokens = mais caro.</div>
+    </div>
+    <div class="glossary-item">
+      <div class="glossary-term">Context Window</div>
+      <div class="glossary-def">A "memória de curto prazo" da IA. Limitada (~200k tokens). Por isso dividimos em stories pequenas.</div>
+    </div>
+    <div class="glossary-item">
+      <div class="glossary-term">MCP</div>
+      <div class="glossary-def">Model Context Protocol. Protocolo que permite à IA acessar ferramentas externas (APIs, bancos, etc.).</div>
+    </div>
+    <div class="glossary-item">
+      <div class="glossary-term">Merge</div>
+      <div class="glossary-def">Misturar. Combinar duas versões de código, pegando o melhor de cada uma.</div>
+    </div>
+    <div class="glossary-item">
+      <div class="glossary-term">Branch</div>
+      <div class="glossary-def">Uma "cópia paralela" do projeto onde você faz mudanças sem afetar o original.</div>
+    </div>
+    <div class="glossary-item">
+      <div class="glossary-term">Commit</div>
+      <div class="glossary-def">Salvar uma versão do projeto no GitHub. Como apertar CTRL+S, mas com histórico.</div>
+    </div>
+    <div class="glossary-item">
+      <div class="glossary-term">PR (Pull Request)</div>
+      <div class="glossary-def">Pedido para incluir suas mudanças no projeto oficial. Alguém revisa antes de aceitar.</div>
+    </div>
+    <div class="glossary-item">
+      <div class="glossary-term">Quality Gate</div>
+      <div class="glossary-def">Checklist que precisa ser aprovada antes de avançar. Garante que tudo funciona antes de seguir.</div>
+    </div>
+    <div class="glossary-item">
+      <div class="glossary-term">FinOps</div>
+      <div class="glossary-def">Financial Operations. A prática de gerenciar e otimizar custos de cloud e APIs.</div>
+    </div>
+    <div class="glossary-item">
+      <div class="glossary-term">LLM</div>
+      <div class="glossary-def">Large Language Model. O "cérebro" da IA (ex: Claude, GPT, Gemini). Maior = mais caro.</div>
+    </div>
+    <div class="glossary-item">
+      <div class="glossary-term">D.R.Y.</div>
+      <div class="glossary-def">Don't Repeat Yourself. Princípio: nunca faça a mesma coisa duas vezes. Automatize.</div>
+    </div>
+    <div class="glossary-item">
+      <div class="glossary-term">n8n</div>
+      <div class="glossary-def">Plataforma de automação de workflows. Conecta diferentes ferramentas entre si visualmente.</div>
+    </div>
+    <div class="glossary-item">
+      <div class="glossary-term">Webhook</div>
+      <div class="glossary-def">Um "alarme" que avisa um sistema quando algo acontece em outro sistema. Gatilho automático.</div>
+    </div>
+    <div class="glossary-item">
+      <div class="glossary-term">API</div>
+      <div class="glossary-def">Application Programming Interface. A "porta" pela qual dois sistemas conversam entre si.</div>
+    </div>
+    <div class="glossary-item">
+      <div class="glossary-term">Run-off</div>
+      <div class="glossary-def">Troca automática entre sessões de agentes. Quando uma sessão termina, a próxima começa sozinha.</div>
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- ==================== CONCLUSÃO ==================== -->
+<section class="module mod-cyan">
+  <div class="concept accent-cyan" style="text-align: center; padding: 3rem 2rem;">
+    <h3 style="font-size: 1.5rem; margin-bottom: 1rem; justify-content: center;">
+      <span class="emoji">🎓</span> Recapitulando: As 5 Regras de Ouro
+    </h3>
+    <div style="text-align: left; max-width: 600px; margin: 0 auto;">
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content"><strong>A fonte da verdade é o GitHub.</strong> Perdeu-se? Volte lá.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content"><strong>Divida tudo em partes pequenas.</strong> PRD → Épicos → Stories → Tasks.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content"><strong>Classifique: determinístico ou probabilístico.</strong> Script ou IA. Economize tokens.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content"><strong>Nunca repita algo manualmente.</strong> Se fez 2x, automatize.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-content"><strong>Pergunte sem medo.</strong> A IA não julga. Pergunte tudo. Sempre.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div>
+
+</body>
+</html>
